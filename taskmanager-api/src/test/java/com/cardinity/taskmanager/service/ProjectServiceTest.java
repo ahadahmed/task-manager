@@ -4,7 +4,6 @@ import com.cardinity.taskmanager.controllers.rest.ProjectDTO;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.ProjectStatus;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -81,8 +80,8 @@ class ProjectServiceTest {
     @Order(4)
     void deleteProjectWhileIdIsInvalid() {
         Exception exception = assertThrows(NoSuchElementException.class, () ->{
-            this.projectService.deleteProject(1l);
+            this.projectService.deleteProject(2l);
         });
-        assertTrue(exception.getMessage().equals("project not found with id: " + 1));
+        assertTrue(exception.getMessage().equals("project not found with id: " + 2));
     }
 }

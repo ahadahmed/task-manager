@@ -33,7 +33,7 @@ jobs:
       uses: actions/cache@v2
       with:
          path: ~/.m2
-         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+         key: ${{ runner.os }}-maven-${{ hashFiles('taskmanager-api/pom.xml') }}
          restore-keys: ${{ runner.os }}-maven-
 
     - name: Test with Maven

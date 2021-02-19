@@ -4,7 +4,6 @@ import com.cardinity.taskmanager.controllers.rest.ProjectDTO;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.ProjectStatus;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

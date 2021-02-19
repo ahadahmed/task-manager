@@ -80,8 +80,8 @@ class ProjectServiceTest {
     @Order(4)
     void deleteProjectWhileIdIsInvalid() {
         Exception exception = assertThrows(NoSuchElementException.class, () ->{
-            this.projectService.deleteProject(1l);
+            this.projectService.deleteProject(2l);
         });
-        assertTrue(exception.getMessage().equals("project not found with id: " + 1));
+        assertTrue(exception.getMessage().equals("project not found with id: " + 2));
     }
 }

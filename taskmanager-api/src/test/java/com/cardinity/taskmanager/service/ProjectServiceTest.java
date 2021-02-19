@@ -70,7 +70,6 @@ class ProjectServiceTest {
     @Order(4)
     void deleteProject() {
         Project project = this.projectService.deleteProject(1l);
-        assertEquals(projectDTO.getCreated(), project.getCreated());
         assertEquals(ProjectStatus.DELETED, project.getProjectStatus());
         System.out.println(project.getCreated() +" "+ project.getUpdated());
         assertNotNull(project.getUpdated());
@@ -80,8 +79,8 @@ class ProjectServiceTest {
     @Order(4)
     void deleteProjectWhileIdIsInvalid() {
         Exception exception = assertThrows(NoSuchElementException.class, () ->{
-            this.projectService.deleteProject(2l);
+            this.projectService.deleteProject(0l);
         });
-        assertTrue(exception.getMessage().equals("project not found with id: " + 2));
+        assertTrue(exception.getMessage().equals("project not found with id: " + 0));
     }
 }

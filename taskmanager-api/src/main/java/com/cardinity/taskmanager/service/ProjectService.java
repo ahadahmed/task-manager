@@ -38,7 +38,7 @@ public class ProjectService {
     }
 
 
-    public Project getProject(Long id){
+    public Project getProject(Long id) throws NoSuchElementException{
         Optional<Project> project = this.projectDao.findById(id);
         if(project.isEmpty()){
             throw new NoSuchElementException("project not found with id: " + id);

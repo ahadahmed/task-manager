@@ -2,44 +2,45 @@ package com.cardinity.taskmanager.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author ahadahmed
  * @see <a href="#"> see this</a>
  */
 @Entity
-public class Project {
+public class Task {
+
+    protected Task(){
+        System.out.println("called by model mapper");
+    }
+
+    public Task(String description, Project project){
+        this.taskDescription = description;
+        this.project = project;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
 
-    @Column(columnDefinition = "ENUM('ACTIVE', 'DELETED')")
+    @Column(nullable = false)
+    private String taskDescription;
+
     @Enumerated(EnumType.STRING)
-    private ProjectStatus projectStatus;
+    private TaskStatus taskStatus;
 
-    @Column(name = "created_at")
     private LocalDateTime created;
 
-    @Column(name = "updated_at")
     private LocalDateTime updated;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Project project;
 
 
     @PrePersist
     protected void onCreate(){
+        this.taskStatus = TaskStatus.OPEN;
         this.created = LocalDateTime.now();
-        this.projectStatus = ProjectStatus.ACTIVE;
-    }
-
-    @PreUpdate
-    protected void onUpdate(){
-        this.updated = LocalDateTime.now();
-        System.out.println("on update called");
     }
 
 
@@ -51,20 +52,20 @@ public class Project {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTaskDescription() {
+        return taskDescription;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
     }
 
-    public ProjectStatus getProjectStatus() {
-        return projectStatus;
+    public TaskStatus getTaskStatus() {
+        return taskStatus;
     }
 
-    public void setProjectStatus(ProjectStatus projectStatus) {
-        this.projectStatus = projectStatus;
+    public void setTaskStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     public LocalDateTime getCreated() {
@@ -83,22 +84,23 @@ public class Project {
         this.updated = updated;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public Project getProject() {
+        return project;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override
     public String toString() {
-        return "Project{" +
+        return "Task{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", projectStatus=" + projectStatus +
+                ", taskDescription='" + taskDescription + '\'' +
+                ", taskStatus=" + taskStatus +
                 ", created=" + created +
                 ", updated=" + updated +
+                ", project=" + project +
                 '}';
     }
 }

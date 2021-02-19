@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class Task {
 
     protected Task(){
-        System.out.println("called by model mapper");
     }
 
     public Task(String description, Project project){

@@ -5,7 +5,7 @@ name: Task-Manager CI with Maven
 
 on:
   push:
-    branches: [ issue ]
+    branches: [ issue* ]
   pull_request:
     branches: [ master ]
 
@@ -37,4 +37,4 @@ jobs:
          restore-keys: ${{ runner.os }}-maven-
 
     - name: Test with Maven
-      run: mvn -B clean test
+      run: cd taskmanager-api/; pwd; mvn -B clean test

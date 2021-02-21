@@ -49,9 +49,7 @@ class ProjectServiceTest {
     @Disabled
     void getProjectWhileProjectIdIsInvalidTest(){
 //        this.projectService.getProject(projectDTO.getId());
-        Exception exception = assertThrows(NoSuchElementException.class, () ->{
-            this.projectService.getProject(1l);
-        });
+        Exception exception = assertThrows(NoSuchElementException.class, () -> this.projectService.getProject(1l));
         assertTrue(exception.getMessage().equals("project not found with id: " + 1));
     }
 
@@ -60,16 +58,14 @@ class ProjectServiceTest {
     @Disabled
     void getProjectWhileProjectIdIsNullTest(){
 //        this.projectService.getProject(projectDTO.getId());
-        Exception exception = assertThrows(NoSuchElementException.class, () ->{
-            this.projectService.getProject(projectDTO.getId());
-        });
+        Exception exception = assertThrows(NoSuchElementException.class, () -> this.projectService.getProject(projectDTO.getId()));
         assertTrue(exception.getMessage().equals("project not found with id: " + projectDTO.getId()));
     }
 
     @Test
     @Order(4)
     void deleteProject() {
-        Project project = this.projectService.deleteProject(1l);
+        ProjectDTO project = this.projectService.deleteProject(1l);
         assertEquals(ProjectStatus.DELETED, project.getProjectStatus());
         System.out.println(project.getCreated() +" "+ project.getUpdated());
         assertNotNull(project.getUpdated());
@@ -78,9 +74,7 @@ class ProjectServiceTest {
     @Test
     @Order(4)
     void deleteProjectWhileIdIsInvalid() {
-        Exception exception = assertThrows(NoSuchElementException.class, () ->{
-            this.projectService.deleteProject(0l);
-        });
+        Exception exception = assertThrows(NoSuchElementException.class, () -> this.projectService.deleteProject(0l));
         assertTrue(exception.getMessage().equals("project not found with id: " + 0));
     }
 }

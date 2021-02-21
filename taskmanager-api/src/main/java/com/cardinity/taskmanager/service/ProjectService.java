@@ -51,11 +51,12 @@ public class ProjectService {
         return projects;
     }
 
-    public Project deleteProject(Long id){
+    public ProjectDTO deleteProject(Long id){
        Project project = this.getProject(id);
        project.setProjectStatus(ProjectStatus.DELETED);
        project =this.projectDao.save(project);
-       return project;
+       ProjectDTO projectDTO = this.projectUtil.convertEntityToDto(project);
+       return projectDTO;
     }
 
 }

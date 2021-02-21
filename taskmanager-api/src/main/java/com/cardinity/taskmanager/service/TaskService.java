@@ -12,6 +12,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -79,5 +80,17 @@ public class TaskService {
             throw new NoSuchElementException("task not found with id "+ taskId);
         }
         return task.get();
+    }
+
+
+    public List<Task> getTasks(){
+        List<Task> tasks = this.taskRepository.findAll();
+        return tasks;
+    }
+
+    public List<TaskDto> getAllTaskByProjectId(long projectId){
+        Project project = projectService.getProject(projectId);
+        List<TaskDto> tasks = this.taskUtil.convertEntityToDtoList(project.getTasks());
+        return tasks;
     }
 }

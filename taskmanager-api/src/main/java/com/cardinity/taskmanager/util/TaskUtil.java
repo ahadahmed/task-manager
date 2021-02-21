@@ -5,8 +5,12 @@ import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.Task;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author ahadahmed
@@ -35,6 +39,16 @@ public class TaskUtil {
     public Task convertDtoToEntity(TaskDto taskDto){
         Task t  = this.modelMapper.map(taskDto, Task.class);
         return t;
+    }
+
+    public List<TaskDto> convertEntityToDtoList(List<Task> tasks){
+
+        List<TaskDto> taskDtos ;
+//                = this.modelMapper.map(tasks, new TypeToken<List<TaskDto>>(){}.getType());
+        taskDtos = tasks.stream().map(task -> {
+            return this.convertEntityToDto(task);
+        }).collect(Collectors.toList());
+        return taskDtos;
     }
 
 }

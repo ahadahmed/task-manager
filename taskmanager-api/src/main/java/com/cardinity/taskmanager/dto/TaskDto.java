@@ -1,7 +1,11 @@
 package com.cardinity.taskmanager.dto;
 
+import com.cardinity.taskmanager.controllers.rest.View;
 import com.cardinity.taskmanager.entity.TaskStatus;
+import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 /**
@@ -10,16 +14,28 @@ import java.time.LocalDateTime;
  */
 public class TaskDto {
 
+    @Schema(accessMode = Schema.AccessMode.READ_WRITE)
+    @NotBlank
+    @JsonView(value = {View.HttpMethodView.PUT.class})
     private Long id;
 
+    @NotBlank
+    @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class})
+    @Schema(example = "test-task")
     private String taskDescription;
 
+    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @Schema(example = "IN_PROGRESS")
     private TaskStatus taskStatus;
 
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime created;
-
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime updated;
 
+    @NotBlank
+    @Schema(required = true, description = "project id of this task", example = "1")
+    @JsonView(value = {View.HttpMethodView.POST.class})
     private Long project;
 
 

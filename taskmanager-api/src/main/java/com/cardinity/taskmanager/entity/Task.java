@@ -1,6 +1,12 @@
 package com.cardinity.taskmanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -8,6 +14,7 @@ import java.time.LocalDateTime;
  * @see <a href="#"> see this</a>
  */
 @Entity
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Task {
 
     protected Task(){
@@ -25,6 +32,7 @@ public class Task {
     @Column(nullable = false)
     private String taskDescription;
 
+    @Column(columnDefinition = "ENUM('OPEN', 'IN_PROGRESS', 'CLOSED')")
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
 
@@ -32,7 +40,10 @@ public class Task {
 
     private LocalDateTime updated;
 
+    private LocalDate dueDate;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Project project;
 
 
@@ -41,6 +52,12 @@ public class Task {
         this.taskStatus = TaskStatus.OPEN;
         this.created = LocalDateTime.now();
     }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.updated = LocalDateTime.now();
+    }
+
 
 
     public Long getId() {
@@ -81,6 +98,14 @@ public class Task {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     public Project getProject() {

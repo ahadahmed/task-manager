@@ -18,8 +18,8 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    public User(String username, String password, Role role, String firstName, String lastName) {
-        this.username = username;
+    public User(String userName, String password, Role role, String firstName, String lastName) {
+        this.userName = userName;
         this.password = password;
         this.roles = Arrays.asList(role);
         this.firstName = firstName;
@@ -27,7 +27,7 @@ public class User {
     }
 
     @Column(name = "username", unique = true)
-    private String username;
+    private String userName;
 
     @Column(name = "password")
     @JsonIgnore
@@ -54,7 +54,7 @@ public class User {
 
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "assignee")
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> assignedTask;
 
     public Long getId() {
@@ -65,12 +65,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String username) {
+        this.userName = username;
     }
 
     public String getPassword() {
@@ -117,7 +117,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", username='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

@@ -52,7 +52,7 @@ public class UserService {
     public Optional<String> signin(String username, String password) {
         LOGGER.info("New user attempting to sign in");
         Optional<String> token = Optional.empty();
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUserName(username);
         if (user.isPresent()) {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
                 token = Optional.of(jwtProvider.createToken(username, user.get().getRoles()));
@@ -74,7 +74,7 @@ public class UserService {
     public Optional<User> signup(String username, String password, String firstName, String lastName) {
         LOGGER.info("New user attempting to sign in");
         Optional<User> user = Optional.empty();
-        if (!userRepository.findByUsername(username).isPresent()) {
+        if (!userRepository.findByUserName(username).isPresent()) {
             Optional<Role> role = roleRepository.findByRoleName("ROLE_USER");
             user = Optional.of(userRepository.save(new User(username,
                             passwordEncoder.encode(password),

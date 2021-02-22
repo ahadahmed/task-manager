@@ -23,10 +23,10 @@ public class TaskManagerUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(s).orElseThrow(() ->
+        User user = userRepository.findByUserName(s).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("User with name %s does not exist", s)));
 
-        return withUsername(user.getUsername())
+        return withUsername(user.getUserName())
             .password(user.getPassword())
             .authorities(user.getRoles())
             .accountExpired(false)

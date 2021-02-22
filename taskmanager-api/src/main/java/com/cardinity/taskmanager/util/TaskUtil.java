@@ -2,7 +2,11 @@ package com.cardinity.taskmanager.util;
 
 import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Task;
+import org.modelmapper.Condition;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.convention.NamingConventions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,8 +38,21 @@ public class TaskUtil {
     }
 
     public Task convertDtoToEntity(TaskDto taskDto){
+        this.modelMapper.getConfiguration()
+                .setSkipNullEnabled(true)
+                .setSourceNamingConvention(NamingConventions.NONE)
+                .setDestinationNamingConvention(NamingConventions.NONE)
+                .setPropertyCondition(Conditions.isNotNull())
+        .setMatchingStrategy(MatchingStrategies.STRICT);
         Task t  = this.modelMapper.map(taskDto, Task.class);
         return t;
+    }
+
+    public void convertDtoToExistingEntity(TaskDto taskDto, Task task){
+        this.modelMapper.getConfiguration()
+                .setPropertyCondition(Conditions.isNotNull())
+                .setSkipNullEnabled(true);
+        this.modelMapper.map(taskDto, task);
     }
 
     public List<TaskDto> convertEntityToDtoList(List<Task> tasks){

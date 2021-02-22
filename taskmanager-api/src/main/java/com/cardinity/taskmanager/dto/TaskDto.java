@@ -39,8 +39,8 @@ public class TaskDto {
     @JsonView(value = {View.HttpMethodView.POST.class})
     private Long project;
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private User assignee;
+    @JsonView(value = {View.HttpMethodView.PUT.class})
+    private UserDto assignee;
 
 
     //########### getter/setters ##########
@@ -93,11 +93,11 @@ public class TaskDto {
         this.project = project;
     }
 
-    public User getAssignee() {
+    public UserDto getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(User assignee) {
+    public void setAssignee(UserDto assignee) {
         this.assignee = assignee;
     }
 

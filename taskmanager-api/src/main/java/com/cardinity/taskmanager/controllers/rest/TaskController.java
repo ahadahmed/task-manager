@@ -54,11 +54,21 @@ public class TaskController {
     }
 
     @PutMapping("/task/{taskId}")
+    @Deprecated
     public TaskDto updateTask(@PathVariable long taskId,
             @RequestBody
             @JsonView(value = View.HttpMethodView.PUT.class)
                     TaskDto taskDto) {
         TaskDto updatedTask = this.taskService.updateTaskStatus(taskId, taskDto.getTaskStatus());
+        return updatedTask;
+    }
+
+    @PutMapping("/task/{taskId}/assign")
+    public TaskDto assignTaskToUser(@PathVariable long taskId,
+                              @RequestBody
+                              @JsonView(value = View.HttpMethodView.PUT.class)
+                                      TaskDto taskDto) {
+        TaskDto updatedTask = this.taskService.updateTask(taskDto);
         return updatedTask;
     }
 }

@@ -1,5 +1,6 @@
 package com.cardinity.taskmanager.controllers.rest;
 
+import com.cardinity.taskmanager.service.InvalidTaskException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,5 +64,12 @@ public class ProjectApiExceptionHandler extends ResponseEntityExceptionHandler {
         final String msg = ex.getMessage();
         ErrorResponse response = new ErrorResponse(HttpStatus.FORBIDDEN, msg);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    @ExceptionHandler(InvalidTaskException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTaskException(InvalidTaskException ex, HttpServletResponse res) {
+        final String msg = ex.getMessage();
+        ErrorResponse response = new ErrorResponse(HttpStatus.BAD_REQUEST, msg);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

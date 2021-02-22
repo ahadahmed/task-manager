@@ -1,5 +1,6 @@
-package com.cardinity.taskmanager.controllers.rest;
+package com.cardinity.taskmanager.dto;
 
+import com.cardinity.taskmanager.controllers.rest.View;
 import com.cardinity.taskmanager.entity.ProjectStatus;
 import com.cardinity.taskmanager.entity.Task;
 import com.fasterxml.jackson.annotation.*;

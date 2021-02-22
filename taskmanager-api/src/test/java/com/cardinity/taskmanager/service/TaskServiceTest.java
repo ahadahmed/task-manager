@@ -1,6 +1,6 @@
 package com.cardinity.taskmanager.service;
 
-import com.cardinity.taskmanager.controllers.rest.ProjectDTO;
+import com.cardinity.taskmanager.dto.ProjectDTO;
 import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.TaskStatus;
 import org.junit.jupiter.api.*;

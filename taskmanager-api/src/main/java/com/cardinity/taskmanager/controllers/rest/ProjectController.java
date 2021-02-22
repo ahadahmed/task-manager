@@ -1,5 +1,6 @@
 package com.cardinity.taskmanager.controllers.rest;
 
+import com.cardinity.taskmanager.dto.ProjectDTO;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.Task;
 import com.cardinity.taskmanager.service.ProjectService;

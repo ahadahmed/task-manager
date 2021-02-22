@@ -1,15 +1,13 @@
 package com.cardinity.taskmanager.service;
 
-import com.cardinity.taskmanager.controllers.rest.ProjectDTO;
+import com.cardinity.taskmanager.dto.ProjectDTO;
 import com.cardinity.taskmanager.dao.ProjectDao;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.ProjectStatus;
 import com.cardinity.taskmanager.util.ProjectUtil;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;

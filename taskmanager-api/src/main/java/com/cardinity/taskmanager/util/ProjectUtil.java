@@ -1,6 +1,6 @@
 package com.cardinity.taskmanager.util;
 
-import com.cardinity.taskmanager.controllers.rest.ProjectDTO;
+import com.cardinity.taskmanager.dto.ProjectDTO;
 import com.cardinity.taskmanager.entity.Project;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

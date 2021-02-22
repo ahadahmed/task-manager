@@ -36,6 +36,7 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
 
+//    @Column(updatable = false)
     private LocalDateTime created;
 
     private LocalDateTime updated;
@@ -45,6 +46,9 @@ public class Task {
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
     private Project project;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private User assignee;
 
 
     @PrePersist
@@ -114,6 +118,14 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 
     @Override

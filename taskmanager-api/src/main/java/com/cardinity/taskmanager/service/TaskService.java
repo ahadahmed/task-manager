@@ -5,10 +5,12 @@ import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.Task;
 import com.cardinity.taskmanager.entity.TaskStatus;
+import com.cardinity.taskmanager.entity.User;
 import com.cardinity.taskmanager.util.TaskUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -25,12 +27,14 @@ public class TaskService {
     private TaskDAO taskRepository;
     private TaskUtil taskUtil;
     private ProjectService projectService;
+    private UserService userService;
 
     @Autowired
-    public TaskService(TaskDAO taskDAO, TaskUtil taskUtil, ProjectService projectService) {
+    public TaskService(TaskDAO taskDAO, TaskUtil taskUtil, ProjectService projectService, UserService userService) {
         this.taskRepository = taskDAO;
         this.taskUtil = taskUtil;
         this.projectService = projectService;
+        this.userService = userService;
     }
 
 
@@ -54,6 +58,7 @@ public class TaskService {
         return taskDto;
     }
 
+    @Deprecated
     public TaskDto updateTaskStatus(@NotNull long taskId, @NotNull TaskStatus newTaskStatus){
         if(newTaskStatus == null){
             throw new InvalidTaskException("invalid task status");
@@ -74,6 +79,44 @@ public class TaskService {
         return taskDto;
     }
 
+    public TaskDto updateTask(@NotNull TaskDto taskDto){
+        if(taskDto.getTaskStatus() == null){
+            throw new InvalidTaskException("invalid task status");
+        }
+        Task existingTask;
+        User newAssignee = null;
+
+        if(taskDto.getAssignee() != null){
+            try {
+                newAssignee = this.userService.getUserById(taskDto.getAssignee().getId());
+            }catch (UsernameNotFoundException ex){
+                throw new InvalidTaskException("Assignee not found with provided id.");
+            }
+        }
+
+
+        try {
+            existingTask = this.getTaskById(taskDto.getId());
+            if(newAssignee != null) {
+                existingTask.setAssignee(newAssignee);
+            }
+        }catch (NoSuchElementException  | InvalidDataAccessApiUsageException ex){
+            throw new NoSuchElementException("task not found with id " + taskDto.getId());
+        }
+        if(existingTask.getTaskStatus() == TaskStatus.CLOSED){
+            throw new InvalidTaskException("can not update already closed task");
+        }
+        this.taskUtil.convertDtoToExistingEntity(taskDto, existingTask);
+//        User assignee = this.userService.getUserById(taskDto.getAssignee().getId());
+//        existingTask.setAssignee(assignee);
+//        this.assignTaskToUser(existingTask.getId() , assignee.getId());
+        existingTask = this.taskRepository.save(existingTask);
+        taskDto =this.taskUtil.convertEntityToDto(existingTask);
+
+        return taskDto;
+    }
+
+
     public Task getTaskById(@NotNull long taskId){
         Optional<Task> task = this.taskRepository.findById(taskId);
         if(task.isEmpty()){
@@ -88,9 +131,20 @@ public class TaskService {
         return tasks;
     }
 
-    public List<TaskDto> getAllTaskByProjectId(long projectId){
-        Project project = projectService.getProject(projectId);
-        List<TaskDto> tasks = this.taskUtil.convertEntityToDtoList(project.getTasks());
-        return tasks;
+    @Deprecated
+    public TaskDto assignTaskToUser(long taskId, long userId){
+       User user = this.userService.getUserById(userId);
+       Task task = this.getTaskById(taskId);
+       task.setAssignee(user);
+       task = this.taskRepository.save(task);
+       TaskDto taskDto = this.taskUtil.convertEntityToDto(task);
+       return taskDto;
+    }
+
+    public List<TaskDto> getAllTaskByUserId(@NotNull long userId){
+        User user = this.userService.getUserById(userId);
+        List<Task> tasks = this.taskRepository.findAllByAssignee(user);
+        List<TaskDto> taskDtos = this.taskUtil.convertEntityToDtoList(tasks);
+        return taskDtos;
     }
 }

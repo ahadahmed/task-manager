@@ -1,12 +1,15 @@
 package com.cardinity.taskmanager.service;
 
-import com.cardinity.taskmanager.controllers.rest.ProjectDTO;
+import com.cardinity.taskmanager.dto.ProjectDTO;
 import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.TaskStatus;
+import com.cardinity.taskmanager.entity.User;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,12 +22,15 @@ class TaskServiceTest {
     private TaskService taskService;
     private ProjectService projectService;
 
+    private UserService userService;
+
     private static TaskDto taskDto;
 
     @Autowired
-    public TaskServiceTest(TaskService taskService, ProjectService projectService) {
+    public TaskServiceTest(TaskService taskService, ProjectService projectService, UserService userService) {
         this.taskService = taskService;
         this.projectService = projectService;
+        this.userService = userService;
 
     }
 
@@ -75,32 +81,24 @@ class TaskServiceTest {
 
     @Test
     @Order(5)
-    void updateTaskStatus() {
+    void updateTask() {
         taskDto = this.saveTask();
         System.out.println(taskDto.toString());
         assertEquals(TaskStatus.OPEN, taskDto.getTaskStatus());
         assertNotNull(taskDto.getProject());
-        taskDto = this.taskService.updateTaskStatus(taskDto.getId(), TaskStatus.CLOSED);
-        System.out.println(taskDto.toString());
-        assertEquals(TaskStatus.CLOSED, taskDto.getTaskStatus());
-        String expected = "can not update already closed task";
-        Exception ex = assertThrows(InvalidTaskException.class, () ->{
-            this.taskService.updateTaskStatus(taskDto.getId(), TaskStatus.CLOSED);
-        });
-        assertEquals(expected, ex.getMessage());
+
+        taskDto.setTaskStatus(TaskStatus.IN_PROGRESS);
+        User user = this.userService.getUserById(2);
+//        taskDto.setAssignee(user);
+        taskDto = this.taskService.updateTask(taskDto);
+        assertEquals(TaskStatus.IN_PROGRESS, taskDto.getTaskStatus());
+        this.getAllTaskByUserIdTwo();
+        this.getAllTaskByUserIdOneWhileAssignTaskToUserTwo();
+
     }
 
     @Test
-    void updateTaskStatusWithInvalidId() {
-        String expected = "task not found with id 100";
-        Exception ex = assertThrows(NoSuchElementException.class, () -> {
-            this.taskService.updateTaskStatus(100, TaskStatus.IN_PROGRESS);
-        });
-        assertEquals(expected, ex.getMessage());
-    }
-
-
-    @Test
+    @Order(6)
     void getTaskWithNullId() {
         String expected = "task not found with id 100";
         Exception ex = assertThrows(NoSuchElementException.class, () -> {
@@ -118,4 +116,68 @@ class TaskServiceTest {
         TaskDto createdTask = this.taskService.createTask(taskDto);
         return createdTask;
     }
+
+    @Test
+    @Order(7)
+    void getAllTaskByUserIdZero() {
+        Exception ex = assertThrows(UsernameNotFoundException.class, () -> {
+            this.taskService.getAllTaskByUserId(0);
+        });
+    }
+
+    @Test
+    @Order(8)
+    void getAllTaskByUserIdTwo() {
+       TaskDto task = this.saveTask();
+       assertNotNull(task.getId());
+       task  = this.taskService.assignTaskToUser(task.getId(), 2);
+//       assertNotNull(task.getAssignee());
+//       System.out.println(task.getAssignee().getId() + " " + task.getAssignee().getUsername());
+       List<TaskDto> tasks = this.taskService.getAllTaskByUserId(2);
+       assertTrue(tasks.size() > 0);
+
+    }
+
+    @Test
+    @Order(9)
+    void getAllTaskByUserIdOneWhileAssignTaskToUserTwo() {
+        TaskDto task = this.saveTask();
+        assertNotNull(task.getId());
+        task  = this.taskService.assignTaskToUser(task.getId(), 2);
+//        assertNotNull(task.getAssignee());
+//        System.out.println(task.getAssignee().getId() + " " + task.getAssignee().getUsername());
+        List<TaskDto> tasks = this.taskService.getAllTaskByUserId(1);
+        assertTrue(tasks.size() == 0);
+
+    }
+
+    @Test
+    @Order(10)
+    void updateTaskStatusWithInvalidId() {
+        String expected = "task not found with id 100";
+        Exception ex = assertThrows(NoSuchElementException.class, () -> {
+            this.taskService.updateTaskStatus(100, TaskStatus.IN_PROGRESS);
+        });
+        assertEquals(expected, ex.getMessage());
+    }
+
+
+    @Test
+    @Order(11)
+    @Disabled
+    void updateTaskStatus() {
+        taskDto = this.saveTask();
+        assertEquals(TaskStatus.OPEN, taskDto.getTaskStatus());
+        assertNotNull(taskDto.getProject());
+        taskDto = this.taskService.updateTaskStatus(taskDto.getId(), TaskStatus.CLOSED);
+        assertEquals(TaskStatus.CLOSED, taskDto.getTaskStatus());
+        String expected = "can not update already closed task";
+        Exception ex = assertThrows(InvalidTaskException.class, () ->{
+            this.taskService.updateTaskStatus(taskDto.getId(), TaskStatus.CLOSED);
+        });
+        assertEquals(expected, ex.getMessage());
+    }
+
+
+
 }

@@ -5,6 +5,7 @@ import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.Task;
 import com.cardinity.taskmanager.entity.TaskStatus;
+import com.cardinity.taskmanager.entity.User;
 import com.cardinity.taskmanager.util.TaskUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,14 @@ public class TaskService {
     private TaskDAO taskRepository;
     private TaskUtil taskUtil;
     private ProjectService projectService;
+    private UserService userService;
 
     @Autowired
-    public TaskService(TaskDAO taskDAO, TaskUtil taskUtil, ProjectService projectService) {
+    public TaskService(TaskDAO taskDAO, TaskUtil taskUtil, ProjectService projectService, UserService userService) {
         this.taskRepository = taskDAO;
         this.taskUtil = taskUtil;
         this.projectService = projectService;
+        this.userService = userService;
     }
 
 
@@ -74,6 +77,27 @@ public class TaskService {
         return taskDto;
     }
 
+    public TaskDto updateTask(@NotNull TaskDto taskDto){
+        if(taskDto.getTaskStatus() == null){
+            throw new InvalidTaskException("invalid task status");
+        }
+        Task existingTask;
+        try {
+            existingTask = this.getTaskById(taskDto.getId());
+        }catch (NoSuchElementException  | InvalidDataAccessApiUsageException ex){
+            throw new NoSuchElementException("task not found with id " + taskDto.getId());
+        }
+        if(existingTask.getTaskStatus() == TaskStatus.CLOSED){
+            throw new InvalidTaskException("can not update already closed task");
+        }
+        existingTask = this.taskUtil.convertDtoToEntity(taskDto);
+        existingTask = this.taskRepository.save(existingTask);
+        taskDto =this.taskUtil.convertEntityToDto(existingTask);
+
+        return taskDto;
+    }
+
+
     public Task getTaskById(@NotNull long taskId){
         Optional<Task> task = this.taskRepository.findById(taskId);
         if(task.isEmpty()){
@@ -88,9 +112,20 @@ public class TaskService {
         return tasks;
     }
 
-    public List<TaskDto> getAllTaskByProjectId(long projectId){
-        Project project = projectService.getProject(projectId);
-        List<TaskDto> tasks = this.taskUtil.convertEntityToDtoList(project.getTasks());
-        return tasks;
+    @Deprecated
+    public TaskDto assignTaskToUser(long taskId, long userId){
+       User user = this.userService.getUserById(userId);
+       Task task = this.getTaskById(taskId);
+       task.setAssignee(user);
+       task = this.taskRepository.save(task);
+       TaskDto taskDto = this.taskUtil.convertEntityToDto(task);
+       return taskDto;
+    }
+
+    public List<TaskDto> getAllTaskByUserId(@NotNull long userId){
+        User user = this.userService.getUserById(userId);
+        List<Task> tasks = this.taskRepository.findAllByAssignee(user);
+        List<TaskDto> taskDtos = this.taskUtil.convertEntityToDtoList(tasks);
+        return taskDtos;
     }
 }

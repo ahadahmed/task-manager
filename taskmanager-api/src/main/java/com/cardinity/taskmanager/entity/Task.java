@@ -46,6 +46,9 @@ public class Task {
     @JsonBackReference
     private Project project;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User assignee;
+
 
     @PrePersist
     protected void onCreate(){
@@ -114,6 +117,14 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
     }
 
     @Override

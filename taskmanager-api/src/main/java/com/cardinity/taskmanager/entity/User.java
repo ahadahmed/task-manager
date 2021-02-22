@@ -26,7 +26,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password")
@@ -52,8 +52,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id",
                     referencedColumnName = "id"))
 
-
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "assignee")
+    private List<Task> assignedTask;
 
     public Long getId() {
         return id;
@@ -101,5 +103,26 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Task> getAssignedTask() {
+        return assignedTask;
+    }
+
+    public void setAssignedTask(List<Task> assignedTask) {
+        this.assignedTask = assignedTask;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", roles=" + roles +
+                ", assignedTask=" + assignedTask +
+                '}';
     }
 }

@@ -10,10 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,4 +88,13 @@ public class UserService {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
+    public User getUserById(@NotNull long userId) throws UsernameNotFoundException{
+        User user = this.userRepository.findById(userId).orElseThrow(
+                () -> new UsernameNotFoundException("User not with provided id."));
+
+        return user;
+
+    }
+
 }

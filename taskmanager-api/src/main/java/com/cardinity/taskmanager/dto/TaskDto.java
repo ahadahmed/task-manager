@@ -2,6 +2,7 @@ package com.cardinity.taskmanager.dto;
 
 import com.cardinity.taskmanager.controllers.rest.View;
 import com.cardinity.taskmanager.entity.TaskStatus;
+import com.cardinity.taskmanager.entity.User;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -37,6 +38,9 @@ public class TaskDto {
     @Schema(required = true, description = "project id of this task", example = "1")
     @JsonView(value = {View.HttpMethodView.POST.class})
     private Long project;
+
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    private User assignee;
 
 
     //########### getter/setters ##########
@@ -89,12 +93,19 @@ public class TaskDto {
         this.project = project;
     }
 
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
     // #######################
 
 
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "TaskDto{" +
                 "id=" + id +
                 ", taskDescription='" + taskDescription + '\'' +
@@ -102,6 +113,7 @@ public class TaskDto {
                 ", created=" + created +
                 ", updated=" + updated +
                 ", project=" + project +
+                ", assignee=" + assignee +
                 '}';
     }
 }

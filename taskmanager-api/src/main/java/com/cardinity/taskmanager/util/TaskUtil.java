@@ -53,6 +53,7 @@ public class TaskUtil {
     public void convertDtoToExistingEntity(TaskDto taskDto, Task task){
         this.modelMapper.getConfiguration()
                 .setPropertyCondition(Conditions.isNotNull())
+                .setAmbiguityIgnored(true)
                 .setSkipNullEnabled(true);
         this.modelMapper.map(taskDto, task);
     }

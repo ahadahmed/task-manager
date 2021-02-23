@@ -36,7 +36,6 @@ public class ProjectDTO {
     private LocalDateTime updated;
 
     @JsonView(value = {View.HttpMethodView.PUT.class, View.ProjectResponseView.class})
-
     private ProjectStatus projectStatus;
 
 

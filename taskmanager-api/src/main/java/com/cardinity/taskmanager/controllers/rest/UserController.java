@@ -52,11 +52,5 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping("/projects/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    @JsonView(value ={View.ProjectResponseView.class})
-    public List<ProjectDTO> getAllProjects(@PathVariable long userId){
-        return this.projectService.getProjectsByUser(userId);
-    }
 
 }

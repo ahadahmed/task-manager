@@ -80,6 +80,17 @@ public class ProjectController {
 
 
 
+    @Operation(summary = "Get all project list of a specific user", description = "API for getting all project of a specific user by  userId")
+    @GetMapping("/projects/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @JsonView(value ={View.ProjectResponseView.class})
+    public List<ProjectDTO> getAllProjects(@PathVariable long userId){
+        return this.projectService.getProjectsByUser(userId);
+    }
+
+
+
+
 
     @Operation(summary = "Create Project", description = "API for create new project")
     @ApiResponse(content = {@Content(mediaType = "application/json"

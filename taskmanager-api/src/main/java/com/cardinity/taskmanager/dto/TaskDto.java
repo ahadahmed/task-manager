@@ -39,7 +39,7 @@ public class TaskDto {
 
     @Future
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     private LocalDate dueDate;
 
     @NotBlank

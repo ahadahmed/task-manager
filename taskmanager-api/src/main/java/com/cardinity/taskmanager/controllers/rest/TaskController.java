@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,15 @@ public class TaskController {
         TaskDto taskDto = this.taskUtil.convertEntityToDto(task);
         return taskDto;
     }
+
+    @JsonView(value = View.TaskResponseView.class)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/task/user/{userId}")
+    public List<TaskDto> getUserTasks(@PathVariable long userId) {
+        List<TaskDto> tasks = this.taskService.getAllTaskByUserId(userId);
+        return tasks;
+    }
+
 
     @GetMapping("/task")
     public List<TaskDto> getTasks() {

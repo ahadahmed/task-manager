@@ -16,6 +16,7 @@ public class UserDto {
     @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     @Schema(accessMode = Schema.AccessMode.READ_WRITE, example = "2")
     long id;
+    @JsonView(value = {View.TaskResponseView.class})
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, example = "user1")
     String userName;
 

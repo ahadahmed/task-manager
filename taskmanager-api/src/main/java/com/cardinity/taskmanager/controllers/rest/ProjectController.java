@@ -89,6 +89,7 @@ public class ProjectController {
             , description = "Success response")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/project")
+    @JsonView(View.ProjectResponseView.class)
     public ProjectDTO create(@RequestBody @JsonView(value = View.HttpMethodView.POST.class)
                                  @Valid ProjectDTO projectDTO){
          projectDTO = this.projectService.createProject(projectDTO);

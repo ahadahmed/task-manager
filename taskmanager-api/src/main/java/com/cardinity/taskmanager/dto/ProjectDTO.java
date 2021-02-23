@@ -24,8 +24,8 @@ public class ProjectDTO {
     @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class, View.ProjectResponseView.class})
     private String projectName;
 
-    @Length(max = 5, message = "project description max length must be 5 or less.")
-    @JsonView(value = {View.ProjectResponseView.class})
+    @Length(max = 255, message = "project description max length must be 255 or less.")
+    @JsonView(value = {View.ProjectResponseView.class, View.HttpMethodView.POST.class})
     private String description;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
@@ -40,7 +40,7 @@ public class ProjectDTO {
     private ProjectStatus projectStatus;
 
 
-    @JsonManagedReference
+//    @JsonManagedReference
 //    @JsonView(value = {View.ProjectResponseView.class})
     private List<TaskDto> tasks;
 

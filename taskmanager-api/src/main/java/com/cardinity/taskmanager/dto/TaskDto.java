@@ -5,8 +5,11 @@ import com.cardinity.taskmanager.entity.TaskStatus;
 import com.cardinity.taskmanager.entity.User;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -33,6 +36,11 @@ public class TaskDto {
     private LocalDateTime created;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime updated;
+
+    @Future
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonView(value = {View.HttpMethodView.PUT.class})
+    private LocalDate dueDate;
 
     @NotBlank
     @Schema(required = true, description = "project id of this task", example = "1")
@@ -83,6 +91,14 @@ public class TaskDto {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
     }
 
     public Long getProject() {

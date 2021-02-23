@@ -71,10 +71,10 @@ public class ProjectController {
     @Operation(summary = "Get all task list of a specific Project", description = "API for getting task list of a specific project by projectId")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/project/{projectId}/tasks")
+    @JsonView(value = View.TaskResponseView.class)
     public List<TaskDto> getProjectTasks(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId) {
-        ProjectDTO p = new ProjectDTO();
         Project project = this.projectService.getProject(projectId);
-        p = this.projectUtil.convertEntityToDto(project);
+        ProjectDTO p = this.projectUtil.convertEntityToDto(project);
         return p.getTasks();
     }
 

@@ -76,7 +76,7 @@ class TaskServiceTest {
         taskDto = this.saveTask();
         assertEquals(1, taskDto.getId());
         assertEquals(TaskStatus.OPEN, taskDto.getTaskStatus());
-        assertEquals(1, taskDto.getProject());
+        assertEquals(1, taskDto.getProjectId());
     }
 
     @Test
@@ -112,7 +112,7 @@ class TaskServiceTest {
         projectDTO.setProjectName("test-project");
         projectDTO = this.projectService.createProject(projectDTO);
         taskDto.setTaskDescription("test-task");
-        taskDto.setProject(projectDTO.getId());
+        taskDto.setProjectId(projectDTO.getId());
         TaskDto createdTask = this.taskService.createTask(taskDto);
         return createdTask;
     }

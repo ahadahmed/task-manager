@@ -44,7 +44,6 @@ public class Task {
     private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
     private Project project;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

@@ -17,26 +17,32 @@ import java.util.List;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class ProjectDTO {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonView(value = {View.ProjectResponseView.class})
     private long id;
 //    @NotBlank
     @Schema(required = true, description = "The name of the project to be created")
-    @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class, View.ProjectResponseView.class})
     private String projectName;
 
     @Length(max = 5, message = "project description max length must be 5 or less.")
+    @JsonView(value = {View.ProjectResponseView.class})
     private String description;
+
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
+    @JsonView(value = {View.ProjectResponseView.class})
     private LocalDateTime created;
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime updated;
 
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.ProjectResponseView.class})
+
     private ProjectStatus projectStatus;
 
 
     @JsonManagedReference
-    private List<Task> tasks;
+//    @JsonView(value = {View.ProjectResponseView.class})
+    private List<TaskDto> tasks;
 
     public ProjectDTO(){}
 
@@ -88,11 +94,13 @@ public class ProjectDTO {
         this.projectStatus = projectStatus;
     }
 
-    public List<Task> getTasks() {
+    public List<TaskDto> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(List<TaskDto> tasks) {
         this.tasks = tasks;
     }
+
+
 }

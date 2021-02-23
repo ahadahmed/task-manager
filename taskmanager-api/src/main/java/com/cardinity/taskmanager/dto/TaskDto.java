@@ -1,6 +1,7 @@
 package com.cardinity.taskmanager.dto;
 
 import com.cardinity.taskmanager.controllers.rest.View;
+import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.TaskStatus;
 import com.cardinity.taskmanager.entity.User;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -45,10 +46,12 @@ public class TaskDto {
     @NotBlank
     @Schema(required = true, description = "project id of this task", example = "1")
     @JsonView(value = {View.HttpMethodView.POST.class, View.TaskResponseView.class})
-    private Long project;
+    private Long projectId;
 
     @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     private UserDto assignee;
+
+    private ProjectDTO project;
 
 
     //########### getter/setters ##########
@@ -101,12 +104,12 @@ public class TaskDto {
         this.dueDate = dueDate;
     }
 
-    public Long getProject() {
-        return project;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setProject(Long project) {
-        this.project = project;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public UserDto getAssignee() {
@@ -115,6 +118,14 @@ public class TaskDto {
 
     public void setAssignee(UserDto assignee) {
         this.assignee = assignee;
+    }
+
+    public ProjectDTO getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectDTO project) {
+        this.project = project;
     }
 
     // #######################

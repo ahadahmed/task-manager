@@ -1,6 +1,7 @@
 package com.cardinity.taskmanager.controllers.rest;
 
 import com.cardinity.taskmanager.dto.ProjectDTO;
+import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.Task;
 import com.cardinity.taskmanager.service.ProjectService;
@@ -47,9 +48,10 @@ public class ProjectController {
             , description = "Success response")
     @GetMapping("/project")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ADMIN')")
-    public List<Project> getAll() {
+    @JsonView(value = {View.ProjectResponseView.class})
+    public List<ProjectDTO> getAll() {
         ProjectDTO p = new ProjectDTO();
-        List<Project> projects = this.projectService.getAll();
+        List<ProjectDTO> projects = this.projectService.getAll();
         p.setProjectName("test-proj");
         return projects;
     }
@@ -68,7 +70,7 @@ public class ProjectController {
     @Operation(summary = "Get all task list of a specific Project", description = "API for getting task list of a specific project by projectId")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/project/{projectId}/tasks")
-    public List<Task> getProjectTasks(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId) {
+    public List<TaskDto> getProjectTasks(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId) {
         ProjectDTO p = new ProjectDTO();
         Project project = this.projectService.getProject(projectId);
         p = this.projectUtil.convertEntityToDto(project);

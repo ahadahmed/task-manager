@@ -1,10 +1,13 @@
 package com.cardinity.taskmanager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author ahadahmed
@@ -56,6 +59,12 @@ public class User {
 
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> assignedTask;
+
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
+    private List<Project> projects;
 
     public Long getId() {
         return id;
@@ -111,6 +120,14 @@ public class User {
 
     public void setAssignedTask(List<Task> assignedTask) {
         this.assignedTask = assignedTask;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     @Override

@@ -75,6 +75,7 @@ public class TaskController {
 
 
     @GetMapping("/task")
+    @JsonView(value = {View.TaskResponseView.class})
     public List<TaskDto> getTasks() {
         List<Task> tasks = this.taskService.getTasks();
         List<TaskDto> t = this.taskUtil.convertEntityToDtoList(tasks);

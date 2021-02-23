@@ -1,12 +1,16 @@
 package com.cardinity.taskmanager.dto;
 
 import com.cardinity.taskmanager.controllers.rest.View;
+import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.TaskStatus;
 import com.cardinity.taskmanager.entity.User;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -15,17 +19,17 @@ import java.time.LocalDateTime;
  */
 public class TaskDto {
 
-    @Schema(accessMode = Schema.AccessMode.READ_WRITE)
+    @Schema(accessMode = Schema.AccessMode.READ_WRITE, example = "3")
     @NotBlank
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = { View.TaskResponseView.class})
     private Long id;
 
     @NotBlank
-    @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     @Schema(example = "test-task")
     private String taskDescription;
 
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     @Schema(example = "IN_PROGRESS")
     private TaskStatus taskStatus;
 
@@ -34,13 +38,20 @@ public class TaskDto {
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime updated;
 
+    @Future
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
+    private LocalDate dueDate;
+
     @NotBlank
     @Schema(required = true, description = "project id of this task", example = "1")
-    @JsonView(value = {View.HttpMethodView.POST.class})
-    private Long project;
+    @JsonView(value = {View.HttpMethodView.POST.class, View.TaskResponseView.class})
+    private Long projectId;
 
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     private UserDto assignee;
+
+    private ProjectDTO project;
 
 
     //########### getter/setters ##########
@@ -85,12 +96,20 @@ public class TaskDto {
         this.updated = updated;
     }
 
-    public Long getProject() {
-        return project;
+    public LocalDate getDueDate() {
+        return dueDate;
     }
 
-    public void setProject(Long project) {
-        this.project = project;
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public UserDto getAssignee() {
@@ -99,6 +118,14 @@ public class TaskDto {
 
     public void setAssignee(UserDto assignee) {
         this.assignee = assignee;
+    }
+
+    public ProjectDTO getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectDTO project) {
+        this.project = project;
     }
 
     // #######################

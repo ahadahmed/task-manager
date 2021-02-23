@@ -1,6 +1,7 @@
 package com.cardinity.taskmanager.controllers.rest;
 
 import com.cardinity.taskmanager.dto.ProjectDTO;
+import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.Task;
 import com.cardinity.taskmanager.service.ProjectService;
@@ -47,9 +48,10 @@ public class ProjectController {
             , description = "Success response")
     @GetMapping("/project")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ADMIN')")
-    public List<Project> getAll() {
+    @JsonView(value = {View.ProjectResponseView.class})
+    public List<ProjectDTO> getAll() {
         ProjectDTO p = new ProjectDTO();
-        List<Project> projects = this.projectService.getAll();
+        List<ProjectDTO> projects = this.projectService.getAll();
         p.setProjectName("test-proj");
         return projects;
     }
@@ -57,22 +59,34 @@ public class ProjectController {
     @Operation(summary = "Get a specific Project info", description = "API for getting information of a specific project by projectId")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/project/{projectId}")
+    @JsonView(value ={View.ProjectResponseView.class})
     public ProjectDTO getProject(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId) {
-        ProjectDTO p = new ProjectDTO();
-        p.setProjectName("test-proj");
         Project project = this.projectService.getProject(projectId);
-        p = this.projectUtil.convertEntityToDto(project);
+        ProjectDTO p = this.projectUtil.convertEntityToDto(project);
         return p;
     }
+
+
 
     @Operation(summary = "Get all task list of a specific Project", description = "API for getting task list of a specific project by projectId")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/project/{projectId}/tasks")
-    public List<Task> getProjectTasks(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId) {
-        ProjectDTO p = new ProjectDTO();
+    @JsonView(value = View.TaskResponseView.class)
+    public List<TaskDto> getProjectTasks(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId) {
         Project project = this.projectService.getProject(projectId);
-        p = this.projectUtil.convertEntityToDto(project);
+        ProjectDTO p = this.projectUtil.convertEntityToDto(project);
         return p.getTasks();
+    }
+
+
+
+
+    @Operation(summary = "Get all project list of a specific user", description = "API for getting all project of a specific user by  userId")
+    @GetMapping("/projects/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @JsonView(value ={View.ProjectResponseView.class})
+    public List<ProjectDTO> getAllProjects(@PathVariable long userId){
+        return this.projectService.getProjectsByUser(userId);
     }
 
 
@@ -87,6 +101,7 @@ public class ProjectController {
             , description = "Success response")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/project")
+    @JsonView(View.ProjectResponseView.class)
     public ProjectDTO create(@RequestBody @JsonView(value = View.HttpMethodView.POST.class)
                                  @Valid ProjectDTO projectDTO){
          projectDTO = this.projectService.createProject(projectDTO);
@@ -96,6 +111,7 @@ public class ProjectController {
     @Operation(summary = "Delete Project", description = "API for delete a project")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/project/{projectId}")
+    @JsonView(value = {View.ProjectResponseView.class})
     public ProjectDTO removeProject(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId){
         ProjectDTO projectDTO = this.projectService.deleteProject(projectId);
         return projectDTO;

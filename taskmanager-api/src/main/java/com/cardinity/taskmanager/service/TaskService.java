@@ -44,7 +44,7 @@ public class TaskService {
         }
         Project p;
         try {
-            p = this.projectService.getProject(taskDto.getProject());
+            p = this.projectService.getProject(taskDto.getProjectId());
         } catch (NoSuchElementException ex) {
             throw new InvalidTaskException("associated project not found for the task");
         } catch (InvalidDataAccessApiUsageException ex) {
@@ -54,7 +54,7 @@ public class TaskService {
         Task task = taskUtil.convertDtoToEntity(taskDto);
         task.setProject(p);
         task = this.taskRepository.save(task);
-        taskDto = taskUtil.convertEntityToDto(task);
+        taskUtil.convertEntityToExistingDto(task, taskDto);
         return taskDto;
     }
 

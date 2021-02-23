@@ -4,6 +4,7 @@ import com.cardinity.taskmanager.dto.ProjectDTO;
 import com.cardinity.taskmanager.dao.ProjectDao;
 import com.cardinity.taskmanager.entity.Project;
 import com.cardinity.taskmanager.entity.ProjectStatus;
+import com.cardinity.taskmanager.entity.User;
 import com.cardinity.taskmanager.util.ProjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author ahadahmed
@@ -22,10 +24,13 @@ public class ProjectService {
     private ProjectDao projectDao;
     private ProjectUtil projectUtil;
 
+    private UserService userService;
+
     @Autowired
-    public ProjectService(ProjectDao projectDao, ProjectUtil util){
+    public ProjectService(ProjectDao projectDao, ProjectUtil util, UserService userService){
         this.projectDao = projectDao;
         this.projectUtil = util;
+        this.userService = userService;
     }
 
     public ProjectDTO createProject(ProjectDTO projectDTO){
@@ -36,17 +41,28 @@ public class ProjectService {
     }
 
 
-    public Project getProject(Long id) throws NoSuchElementException{
-        Optional<Project> project = this.projectDao.findById(id);
+    public Project getProject(Long projectId) throws NoSuchElementException{
+        Optional<Project> project = this.projectDao.findById(projectId);
         if(project.isEmpty()){
-            throw new NoSuchElementException("project not found with id: " + id);
+            throw new NoSuchElementException("project not found with id: " + projectId);
         }
         return project.get();
     }
 
-    public List<Project> getAll(){
-        List<Project> projects = (List<Project>) this.projectDao.findAll();
+    public List<ProjectDTO> getProjectsByUser(long userId){
+        User user = this.userService.getUserById(userId);
+        List<Project> projectEntity = this.projectDao.findAllByUsers(user);
+//        List<ProjectDTO> projects = this.projectUtil.convertEntityToDtoList(user.getProjects());
+        List<ProjectDTO> projects = this.projectUtil.convertEntityToDtoList(user.getProjects());
+
         return projects;
+    }
+
+    public List<ProjectDTO> getAll(){
+        List<Project> projects = (List<Project>) this.projectDao.findAll();
+//        List<ProjectDTO> p = this.projectUtil.convertEntityToDtoList(Set.copyOf(projects));
+        List<ProjectDTO> p = this.projectUtil.convertEntityToDtoList(projects);
+        return p;
     }
 
     public ProjectDTO deleteProject(Long id){

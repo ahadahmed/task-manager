@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,5 +77,11 @@ class ProjectServiceTest {
     void deleteProjectWhileIdIsInvalid() {
         Exception exception = assertThrows(NoSuchElementException.class, () -> this.projectService.deleteProject(0l));
         assertTrue(exception.getMessage().equals("project not found with id: " + 0));
+    }
+
+    @Test
+    void getProjectsByUser() {
+        final long userId = 1;
+        List<ProjectDTO> projects = this.projectService.getProjectsByUser(userId);
     }
 }

@@ -1,8 +1,11 @@
 package com.cardinity.taskmanager.controllers.rest;
 
 import com.cardinity.taskmanager.dto.LoginDto;
+import com.cardinity.taskmanager.dto.ProjectDTO;
 import com.cardinity.taskmanager.entity.User;
+import com.cardinity.taskmanager.service.ProjectService;
 import com.cardinity.taskmanager.service.UserService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProjectService projectService;
 
     @PostMapping("/signin")
     public String login(@RequestBody @Valid LoginDto loginDto) {
@@ -46,5 +51,6 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userService.getAll();
     }
+
 
 }

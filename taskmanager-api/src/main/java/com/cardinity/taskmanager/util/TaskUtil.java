@@ -30,7 +30,9 @@ public class TaskUtil {
       TaskDto taskDto =  this.modelMapper.typeMap(Task.class, TaskDto.class).addMappings(mapper -> {
 //            mapper.map(source -> source.getTaskDescription(), TaskDto::setTaskDescription);
 //            mapper.map(source -> source.getId(), TaskDto::setId);
-            mapper.map(source ->source.getProject().getId(), TaskDto::setProject);
+            mapper.map(source ->source.getProject().getId(), TaskDto::setProjectId);
+            mapper.map(Task::getProject, TaskDto::setProject);
+            mapper.map(Task::getAssignee, TaskDto::setAssignee);
 //            mapper.map(source -> source.getTaskStatus(), TaskDto::setTaskStatus);
         }).map(task);
 //        TaskDto taskDto =
@@ -51,9 +53,18 @@ public class TaskUtil {
     public void convertDtoToExistingEntity(TaskDto taskDto, Task task){
         this.modelMapper.getConfiguration()
                 .setPropertyCondition(Conditions.isNotNull())
+                .setAmbiguityIgnored(true)
                 .setSkipNullEnabled(true);
         this.modelMapper.map(taskDto, task);
     }
+
+    public void convertEntityToExistingDto(Task task, TaskDto taskDto){
+        this.modelMapper.getConfiguration()
+                .setPropertyCondition(Conditions.isNotNull())
+                .setSkipNullEnabled(true);
+        this.modelMapper.map(task, taskDto);
+    }
+
 
     public List<TaskDto> convertEntityToDtoList(List<Task> tasks){
 

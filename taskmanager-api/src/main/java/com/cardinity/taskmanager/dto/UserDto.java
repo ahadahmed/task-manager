@@ -2,6 +2,9 @@ package com.cardinity.taskmanager.dto;
 
 import com.cardinity.taskmanager.controllers.rest.View;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author ahadahmed
@@ -9,9 +12,12 @@ import com.fasterxml.jackson.annotation.JsonView;
  */
 public class UserDto {
 
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @NotBlank
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
+    @Schema(accessMode = Schema.AccessMode.READ_WRITE, example = "2")
     long id;
-
+    @JsonView(value = {View.TaskResponseView.class})
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, example = "user1")
     String userName;
 
 

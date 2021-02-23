@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,13 +50,10 @@ public class TaskController {
             "  \"error\": \"task not found with id 100\",\n" +
             "  \"errors\": []\n" +
             "}"
-
-
     )
 
     )}, responseCode = "404"
             , description = "Task not found with taskId")
-
 
     @JsonView(value = View.TaskResponseView.class)
     @GetMapping("/task/{taskId}")
@@ -85,8 +83,8 @@ public class TaskController {
 
     @Operation(summary = "Create New Task", description = "API for creating a New Task")
     @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDto.class))
-            , responseCode = "200"
-            , description = "Success response")
+            , responseCode = "201"
+            , description = "Task Created Successfully.")
 
     @ApiResponse(content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)
             , examples = @ExampleObject(
@@ -104,7 +102,8 @@ public class TaskController {
             , description = "Empty task description.")
 
     @PostMapping("/task")
-    @JsonView(value = View.HttpMethodView.POST.class)
+    @JsonView(value = View.TaskResponseView.class)
+    @ResponseStatus(HttpStatus.CREATED)
     public TaskDto createTask(
             @RequestBody
             @JsonView(value = View.HttpMethodView.POST.class)

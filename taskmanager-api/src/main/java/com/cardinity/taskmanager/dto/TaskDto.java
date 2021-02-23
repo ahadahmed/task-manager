@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
  */
 public class TaskDto {
 
-    @Schema(accessMode = Schema.AccessMode.READ_WRITE)
+    @Schema(accessMode = Schema.AccessMode.READ_WRITE, example = "3")
     @NotBlank
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     private Long id;
 
     @NotBlank
-    @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.POST.class, View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     @Schema(example = "test-task")
     private String taskDescription;
 
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     @Schema(example = "IN_PROGRESS")
     private TaskStatus taskStatus;
 
@@ -36,10 +36,10 @@ public class TaskDto {
 
     @NotBlank
     @Schema(required = true, description = "project id of this task", example = "1")
-    @JsonView(value = {View.HttpMethodView.POST.class})
+    @JsonView(value = {View.HttpMethodView.POST.class, View.TaskResponseView.class})
     private Long project;
 
-    @JsonView(value = {View.HttpMethodView.PUT.class})
+    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
     private UserDto assignee;
 
 

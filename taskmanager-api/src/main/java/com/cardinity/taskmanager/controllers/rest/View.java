@@ -13,5 +13,9 @@ public interface View {
 
     }
 
+    interface TaskResponseView{
+
+    }
+
 
 }

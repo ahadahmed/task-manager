@@ -4,6 +4,7 @@ import com.cardinity.taskmanager.service.InvalidTaskException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
@@ -33,6 +34,16 @@ public class ProjectApiExceptionHandler extends ResponseEntityExceptionHandler {
         for (FieldError error : ex.getFieldErrors()) {
             response.addValidationError(error.getField(), error.getDefaultMessage(), error.getObjectName(), error.getRejectedValue(), error.getCode());
         }
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        final String msg = ex.getLocalizedMessage();
+        ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, msg);
+        /*for (StackTraceElement error : ex.getStackTrace()) {
+            response.addValidationError(error.getField(), error.getDefaultMessage(), error.getObjectName(), error.getRejectedValue(), error.getCode());
+        }*/
         return ResponseEntity.badRequest().body(response);
     }
 

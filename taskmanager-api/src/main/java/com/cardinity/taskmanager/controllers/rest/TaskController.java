@@ -112,6 +112,29 @@ public class TaskController {
         return response;
     }
 
+
+    @Operation(summary = "Update a Task", description = "API to update task status, assign task to a user, set/change due date")
+    @ApiResponse(content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDto.class))
+            , responseCode = "200"
+            , description = "Task updated Successfully.")
+    @ApiResponse(
+            responseCode = "400", description = "Assignee not found with provided id.",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}
+            )
+    @PutMapping("/task/{taskId}")
+    @JsonView(value = View.TaskResponseView.class)
+    @ResponseStatus(HttpStatus.OK)
+    public TaskDto assignTaskToUser(@PathVariable long taskId,
+                                    @RequestBody
+                                    @JsonView(value = View.HttpMethodView.PUT.class)
+                                            TaskDto taskDto) {
+        taskDto.setId(taskId);
+        TaskDto updatedTask = this.taskService.updateTask(taskDto);
+        return updatedTask;
+    }
+
+
+    /*
     @PutMapping("/task/{taskId}")
     @Deprecated
     public TaskDto updateTask(@PathVariable long taskId,
@@ -120,15 +143,5 @@ public class TaskController {
                                       TaskDto taskDto) {
         TaskDto updatedTask = this.taskService.updateTaskStatus(taskId, taskDto.getTaskStatus());
         return updatedTask;
-    }
-
-    @PutMapping("/task/{taskId}/assign")
-    @JsonView(value = View.TaskResponseView.class)
-    public TaskDto assignTaskToUser(@PathVariable long taskId,
-                                    @RequestBody
-                                    @JsonView(value = View.HttpMethodView.PUT.class)
-                                            TaskDto taskDto) {
-        TaskDto updatedTask = this.taskService.updateTask(taskDto);
-        return updatedTask;
-    }
+    }*/
 }

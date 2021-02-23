@@ -21,7 +21,7 @@ public class TaskDto {
 
     @Schema(accessMode = Schema.AccessMode.READ_WRITE, example = "3")
     @NotBlank
-    @JsonView(value = {View.HttpMethodView.PUT.class, View.TaskResponseView.class})
+    @JsonView(value = { View.TaskResponseView.class})
     private Long id;
 
     @NotBlank

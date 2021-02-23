@@ -59,13 +59,14 @@ public class ProjectController {
     @Operation(summary = "Get a specific Project info", description = "API for getting information of a specific project by projectId")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/project/{projectId}")
+    @JsonView(value ={View.ProjectResponseView.class})
     public ProjectDTO getProject(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId) {
-        ProjectDTO p = new ProjectDTO();
-        p.setProjectName("test-proj");
         Project project = this.projectService.getProject(projectId);
-        p = this.projectUtil.convertEntityToDto(project);
+        ProjectDTO p = this.projectUtil.convertEntityToDto(project);
         return p;
     }
+
+
 
     @Operation(summary = "Get all task list of a specific Project", description = "API for getting task list of a specific project by projectId")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -110,6 +111,7 @@ public class ProjectController {
     @Operation(summary = "Delete Project", description = "API for delete a project")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/project/{projectId}")
+    @JsonView(value = {View.ProjectResponseView.class})
     public ProjectDTO removeProject(@PathVariable("projectId") @Min(value = 1, message = "project id must be greater than 0") long projectId){
         ProjectDTO projectDTO = this.projectService.deleteProject(projectId);
         return projectDTO;

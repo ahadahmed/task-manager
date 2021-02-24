@@ -37,4 +37,10 @@ jobs:
          restore-keys: ${{ runner.os }}-maven-
 
     - name: Test with Maven
-      run: cd taskmanager-api/; pwd; mvn -B clean test
+      run: cd taskmanager-api/; pwd; mvn -B clean package
+    
+    - name: Echo current directory
+      run: pwd;
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag taskmanager:latest
+

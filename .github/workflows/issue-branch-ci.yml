@@ -40,7 +40,7 @@ jobs:
       run: cd taskmanager-api/; pwd; mvn -B clean package
     
     - name: Echo current directory
-      run: pwd;
+      run: pwd; cd taskmanager-api/;
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag taskmanager:latest
+      run: pwd;cd taskmanager-api/; docker build . --file Dockerfile --tag taskmanager:latest
 

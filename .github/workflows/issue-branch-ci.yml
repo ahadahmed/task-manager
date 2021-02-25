@@ -42,7 +42,7 @@ jobs:
     - name: Echo current directory
       run: pwd; cd taskmanager-api/;
     - name: Build the Docker image
-      run: pwd;cd taskmanager-api/; docker build . --file Dockerfile --tag taskmanager:latest; 
+      run: pwd;cd taskmanager-api/; docker build . --file Dockerfile --tag jphost/taskmanager:latest; 
     - name: push to docker hub
       env:
         USER: ${{ secrets.DOCKER_USER_NAME }}

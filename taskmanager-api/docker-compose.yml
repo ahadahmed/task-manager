@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: taskmanager-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+#      - MYSQL_DATABASE=taskmanager
+#      - MYSQL_USER=root
+#      - MYSQL_PASSWORD=password
+    ports:
+      - "3306:3306"
+
+  taskmanager-app:
+    image: jphost/taskmanager:latest
+    container_name: taskmanager
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://taskmanager-mysql:3306/taskmanager2?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_PLATFORM=mysql
+    ports:
+      - "8080:8080"
+      - "8443:8443"

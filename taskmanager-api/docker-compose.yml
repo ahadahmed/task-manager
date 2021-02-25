@@ -16,11 +16,19 @@ services:
     container_name: taskmanager
     depends_on:
       - mysql
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://taskmanager-mysql:3306/taskmanager2?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_DATASOURCE_PLATFORM=mysql
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://taskmanager-mysql:3306/taskmanager2?createDatabaseIfNotExist=true
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=password
+#      - SPRING_DATASOURCE_PLATFORM=mysql
+#      - SERVER.SSL.KEY-STORE=classpath:taskmanager.jks
+#      - SERVER.SSL.KEY-STORE-TYPE=pkcs12
+#      - SERVER.SSL.KEY-STORE-PASSWORD=taskmanager
+#      - SERVER.SSL.KEY-PASSWORD=taskmanager
+#      - SERVER.SSL.KEY-ALIAS=taskmanager
+#      - SERVER.PORT=8443
+        #server.ssl.client-auth=need
+#      - SERVER.SSL.ENABLED=true
     ports:
       - "8080:8080"
       - "8443:8443"

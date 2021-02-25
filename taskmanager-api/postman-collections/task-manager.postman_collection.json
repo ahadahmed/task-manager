@@ -1,0 +1,791 @@
+{
+	"info": {
+		"_postman_id": "5f69d60a-6a91-4c16-a3b8-13d9a4de5ed8",
+		"name": "task-manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "USER-SIGNIN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.environment.set(\"JWT_AUTH_TOKEN\", responseBody);",
+							"console.log(responseBody);",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"letmein\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/users/signin",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"users",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET-USERS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/users",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ALL-PROJECTS-LIST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/project",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create-project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Check prject db id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).contain;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"projectName\": \"test2\",\n    \"description\": \"PROJECT-3\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/project",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prjects-By-User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/projects/user/2",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"projects",
+						"user",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PROJECT-BY-INVALID-ID-0",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400-PROJECT ID == 0\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response body status == BAD_REQUEST\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"BAD_REQUEST\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/project/0",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"project",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PROJECT-BY-VALID-ID-4",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/project/4",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"project",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE-PROJECT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/project/4",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"project",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ALL-TASK-LIST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GETTASK-INVALIDID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task/-1",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task",
+						"-1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TASK-BY-VALID-ID-3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Test response body contains task ID\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(3);",
+							"    pm.expect(jsonData.taskStatus).exist;",
+							"});",
+							"",
+							"pm.test(\"Test response body taskStatus exist\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.taskStatus).exist;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task/3",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ALL-TASK-BY-PROJECT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check all the task have same projectId as in request\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.forEach(function(item){",
+							"        console.log(item.projectId);",
+							"        pm.expect(item.projectId).to.eql(4);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/project/4/tasks",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"project",
+						"4",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ALL-TASK-BYUSER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check all the task have same assignee as in request param\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.forEach(function(item){",
+							"        console.log(item.assignee.id);",
+							"        pm.expect(item.assignee.id).to.eql(1);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task/user/1",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE-TASK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Task contain databas id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.taskStatus).to.eq(\"OPEN\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"taskDescription\": \"task2-proj4\",\n    \"projectId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE-TASK-INVALID-PROJECT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"taskDescription\": \"task2-proj4\",\n    \"projectId\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE-TASK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 2,\n  \"taskDescription\": \"test-task-update1\",\n  \"taskStatus\": \"OPEN\",\n  \"dueDate\": \"2021-02-24\",\n  \"assignee\": {\n    \"id\": 1,\n    \"userName\": \"string\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task/1",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

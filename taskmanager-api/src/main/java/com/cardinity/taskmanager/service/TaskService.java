@@ -10,13 +10,18 @@ import com.cardinity.taskmanager.util.TaskUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
 
 /**
  * @author ahadahmed
@@ -126,10 +131,20 @@ public class TaskService {
     }
 
 
-    public List<Task> getTasks(){
-        List<Task> tasks = this.taskRepository.findAll();
+    public List<Task> getTasks(TaskDto taskDto){
+        Task task = this.taskUtil.convertDtoToEntity(taskDto);
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
+                .withMatcher("taskStatus", ignoreCase().contains());
+        Example<Task> taskExample = Example.of(task, exampleMatcher);
+        List<Task> tasks = this.taskRepository.findAll(taskExample);
         return tasks;
     }
+
+    public List<Task> getExpiredTasks(){
+        List<Task> tasks = this.taskRepository.findAllByDueDateBefore(LocalDate.now());
+        return tasks;
+    }
+
 
     @Deprecated
     public TaskDto assignTaskToUser(long taskId, long userId){

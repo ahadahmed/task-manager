@@ -10,6 +10,8 @@ import com.cardinity.taskmanager.util.TaskUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
 /**
  * @author ahadahmed
@@ -130,7 +134,10 @@ public class TaskService {
         List<Task> tasks;
         if (status != null) {
             // Find all tasks by status if status provided in query params
-            tasks = this.taskRepository.findAllByTaskStatus(status);
+            Task task = new Task(null, null);
+            task.setTaskStatus(status);
+            Example<Task> taskStatusExample = Example.of(task, ExampleMatcher.matchingAll().withMatcher("taskStatus", exact()));
+            tasks = this.taskRepository.findAll(taskStatusExample);
         } else {
             // Find all tasks if status not provided in query params
             tasks = this.taskRepository.findAll();

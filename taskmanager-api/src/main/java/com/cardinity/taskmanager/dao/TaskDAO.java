@@ -18,5 +18,4 @@ public interface TaskDAO extends JpaRepository<Task, Long> {
 
     List<Task> findAllByAssignee(User assignee);
 
-    List<Task> findAllByTaskStatus(TaskStatus taskStatus);
 }

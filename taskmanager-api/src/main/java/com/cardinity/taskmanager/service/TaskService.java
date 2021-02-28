@@ -126,8 +126,15 @@ public class TaskService {
     }
 
 
-    public List<Task> getTasks(){
-        List<Task> tasks = this.taskRepository.findAll();
+    public List<Task> getTasks(TaskStatus status) {
+        List<Task> tasks;
+        if (status != null) {
+            // Find all tasks by status if status provided in query params
+            tasks = this.taskRepository.findAllByTaskStatus(status);
+        } else {
+            // Find all tasks if status not provided in query params
+            tasks = this.taskRepository.findAll();
+        }
         return tasks;
     }
 

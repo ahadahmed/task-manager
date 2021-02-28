@@ -2,6 +2,7 @@ package com.cardinity.taskmanager.controllers.rest;
 
 import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Task;
+import com.cardinity.taskmanager.entity.TaskStatus;
 import com.cardinity.taskmanager.service.TaskService;
 import com.cardinity.taskmanager.util.TaskUtil;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -71,11 +72,11 @@ public class TaskController {
         return tasks;
     }
 
-
+    @Operation(summary = "Get all tasks", description = "API to fetch all tasks, set 'status' query param to get all tasks for that status")
     @GetMapping("/task")
     @JsonView(value = {View.TaskResponseView.class})
-    public List<TaskDto> getTasks() {
-        List<Task> tasks = this.taskService.getTasks();
+    public List<TaskDto> getTasks(@RequestParam("status") TaskStatus status) {
+        List<Task> tasks = this.taskService.getTasks(status);
         List<TaskDto> t = this.taskUtil.convertEntityToDtoList(tasks);
         return t;
     }

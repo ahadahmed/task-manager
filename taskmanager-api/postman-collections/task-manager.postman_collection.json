@@ -378,6 +378,168 @@
 			"response": []
 		},
 		{
+			"name": "CREATE-TASK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Task contain databas id\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.taskStatus).to.eq(\"OPEN\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"taskDescription\": \"task2-proj4\",\n    \"projectId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE-TASK-INVALID-PROJECT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"taskDescription\": \"task2-proj4\",\n    \"projectId\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE-TASK",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 2,\n  \"taskDescription\": \"test-task-update1\",\n  \"taskStatus\": \"OPEN\",\n  \"dueDate\": \"2021-02-24\",\n  \"assignee\": {\n    \"id\": 1,\n    \"userName\": \"string\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task/1",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "ALL-TASK-LIST",
 			"event": [
 				{
@@ -415,6 +577,55 @@
 						"{{CONTEXT_PATH}}",
 						"{{API_VERSION}}",
 						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ALL-TASK-LIST-BY-STATUS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task?status=OPEN",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "OPEN"
+						}
 					]
 				}
 			},
@@ -573,6 +784,37 @@
 			"response": []
 		},
 		{
+			"name": "Get Expired task.",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{JWT_AUTH_TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task/expired",
+					"host": [
+						"{{SERVER}}"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"{{CONTEXT_PATH}}",
+						"{{API_VERSION}}",
+						"task",
+						"expired"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "ALL-TASK-BYUSER",
 			"event": [
 				{
@@ -619,168 +861,6 @@
 						"{{API_VERSION}}",
 						"task",
 						"user",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CREATE-TASK",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});",
-							"",
-							"pm.test(\"Task contain databas id\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.taskStatus).to.eq(\"OPEN\")",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{JWT_AUTH_TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"taskDescription\": \"task2-proj4\",\n    \"projectId\": 1\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task",
-					"host": [
-						"{{SERVER}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"{{CONTEXT_PATH}}",
-						"{{API_VERSION}}",
-						"task"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CREATE-TASK-INVALID-PROJECT",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(400);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{JWT_AUTH_TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"taskDescription\": \"task2-proj4\",\n    \"projectId\": 100\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task",
-					"host": [
-						"{{SERVER}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"{{CONTEXT_PATH}}",
-						"{{API_VERSION}}",
-						"task"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "UPDATE-TASK",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{JWT_AUTH_TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"id\": 2,\n  \"taskDescription\": \"test-task-update1\",\n  \"taskStatus\": \"OPEN\",\n  \"dueDate\": \"2021-02-24\",\n  \"assignee\": {\n    \"id\": 1,\n    \"userName\": \"string\"\n  }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{SERVER}}:{{PORT}}/{{CONTEXT_PATH}}/{{API_VERSION}}/task/1",
-					"host": [
-						"{{SERVER}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"{{CONTEXT_PATH}}",
-						"{{API_VERSION}}",
-						"task",
 						"1"
 					]
 				}

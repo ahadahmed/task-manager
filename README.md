@@ -45,6 +45,6 @@ spring.datasource.password=<DATABASE_PASSWORD>
 ```
 * Run maven application from your IDE.
 
+<hr>
 
-
- 
+[Known Issues](https://github.com/ahadahmed/task-manager/issues)

@@ -2,6 +2,7 @@ package com.cardinity.taskmanager.controllers.rest;
 
 import com.cardinity.taskmanager.dto.TaskDto;
 import com.cardinity.taskmanager.entity.Task;
+import com.cardinity.taskmanager.entity.TaskStatus;
 import com.cardinity.taskmanager.service.TaskService;
 import com.cardinity.taskmanager.util.TaskUtil;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -12,11 +13,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -63,6 +67,7 @@ public class TaskController {
         return taskDto;
     }
 
+    @Operation(summary = "Get all tasks by user", description = "API for getting all tasks of an specific assignee.")
     @JsonView(value = View.TaskResponseView.class)
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/task/user/{userId}")
@@ -71,11 +76,25 @@ public class TaskController {
         return tasks;
     }
 
-
+    @Operation(summary = "Get all tasks/ search by task status", description = "API for getting all tasks, Optionally you can search task by status.")
     @GetMapping("/task")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @JsonView(value = {View.TaskResponseView.class})
+    public List<TaskDto> getTasks(@RequestParam(value = "status", required = false) @Valid TaskStatus taskStatus) {
+        TaskDto task = new TaskDto();
+        if(taskStatus != null){
+            task.setTaskStatus(taskStatus);
+        }
+        List<Task> tasks = this.taskService.getTasks(task);
+        List<TaskDto> t = this.taskUtil.convertEntityToDtoList(tasks);
+        return t;
+    }
+
+    @Operation(summary = "Get expired tasks", description = "API for getting expired tasks, whose due date has passed.")
+    @GetMapping("/task/expired")
     @JsonView(value = {View.TaskResponseView.class})
     public List<TaskDto> getTasks() {
-        List<Task> tasks = this.taskService.getTasks();
+        List<Task> tasks = this.taskService.getExpiredTasks();
         List<TaskDto> t = this.taskUtil.convertEntityToDtoList(tasks);
         return t;
     }
